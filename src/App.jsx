@@ -12,6 +12,7 @@ import OrderLookupPage from './pages/OrderLookupPage'
 import SellerLoginPage from './pages/seller/SellerLoginPage'
 import SellerDashboardPage from './pages/seller/SellerDashboardPage'
 import SellerOrderDetailPage from './pages/seller/SellerOrderDetailPage'
+import SellerProductsPage from './pages/seller/SellerProductsPage'
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
         <Route element={<SellerLayout />}>
           <Route index element={<SellerDashboardPage />} />
           <Route path="don-hang/:orderId" element={<SellerOrderDetailPage />} />
+          <Route path="san-pham" element={<SellerProductsPage />} />
         </Route>
       </Route>
     </Routes>

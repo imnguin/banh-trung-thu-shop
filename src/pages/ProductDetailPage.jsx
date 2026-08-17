@@ -1,9 +1,9 @@
-import { useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Link, Navigate, useNavigate, useParams } from 'react-router-dom'
 import { CaretRight, Check, ShoppingCart } from '@phosphor-icons/react'
 import ProductImage from '../components/ProductImage'
 import QuantitySelector from '../components/QuantitySelector'
-import { getProductBySlug } from '../data/products'
+import { useProducts } from '../hooks/useProducts'
 import { getCategoryName } from '../data/categories'
 import { useCart } from '../context/CartContext'
 import { formatCurrency } from '../lib/format'
@@ -12,17 +12,29 @@ export default function ProductDetailPage() {
   const { slug } = useParams()
   const navigate = useNavigate()
   const { addItem } = useCart()
-  const product = getProductBySlug(slug)
+  const { products, loading } = useProducts({ activeOnly: true })
 
-  const [variantId, setVariantId] = useState(product?.variants[0]?.id)
+  const product = useMemo(() => products.find((p) => p.slug === slug), [products, slug])
+
+  const [variantId, setVariantId] = useState(null)
   const [qty, setQty] = useState(1)
   const [added, setAdded] = useState(false)
+
+  useEffect(() => {
+    if (product) {
+      setVariantId(product.variants[0]?.id)
+    }
+  }, [product])
+
+  if (loading) {
+    return <div className="mx-auto max-w-6xl px-4 py-16 text-center text-muted-foreground">Đang tải sản phẩm...</div>
+  }
 
   if (!product) {
     return <Navigate to="/san-pham" replace />
   }
 
-  const variant = product.variants.find((v) => v.id === variantId)
+  const variant = product.variants.find((v) => v.id === variantId) ?? product.variants[0]
   const unitPrice = product.price + variant.priceDiff
 
   function handleAddToCart() {
@@ -51,7 +63,7 @@ export default function ProductDetailPage() {
       </nav>
 
       <div className="grid gap-8 md:grid-cols-2">
-        <ProductImage category={product.category} className="aspect-square w-full" />
+        <ProductImage category={product.category} image={product.image} alt={product.name} className="aspect-square w-full" />
 
         <div>
           <h1 className="font-heading text-2xl font-bold text-foreground">{product.name}</h1>

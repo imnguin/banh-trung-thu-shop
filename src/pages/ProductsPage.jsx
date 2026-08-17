@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import ProductCard from '../components/ProductCard'
-import { PRODUCTS } from '../data/products'
+import { useProducts } from '../hooks/useProducts'
 import { CATEGORIES } from '../data/categories'
 
 const SORT_OPTIONS = [
@@ -11,13 +11,14 @@ const SORT_OPTIONS = [
 ]
 
 export default function ProductsPage() {
+  const { products, loading } = useProducts({ activeOnly: true })
   const [searchParams, setSearchParams] = useSearchParams()
   const activeCategory = searchParams.get('danh-muc') ?? ''
   const query = searchParams.get('q') ?? ''
   const sort = searchParams.get('sort') ?? 'default'
 
   const filtered = useMemo(() => {
-    let list = PRODUCTS
+    let list = products
     if (activeCategory) {
       list = list.filter((p) => p.category === activeCategory)
     }
@@ -31,7 +32,7 @@ export default function ProductsPage() {
       list = [...list].sort((a, b) => b.price - a.price)
     }
     return list
-  }, [activeCategory, query, sort])
+  }, [products, activeCategory, query, sort])
 
   function setParam(key, value) {
     const next = new URLSearchParams(searchParams)
@@ -90,14 +91,16 @@ export default function ProductsPage() {
         </label>
       </div>
 
-      {filtered.length === 0 ? (
+      {loading ? (
+        <div className="mt-16 text-center text-muted-foreground">Đang tải sản phẩm...</div>
+      ) : filtered.length === 0 ? (
         <div className="mt-16 text-center text-muted-foreground">
           Không tìm thấy sản phẩm phù hợp. Thử chọn danh mục khác hoặc từ khóa khác.
         </div>
       ) : (
         <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
           {filtered.map((p) => (
-            <ProductCard key={p.id} product={p} />
+            <ProductCard key={p._id} product={p} />
           ))}
         </div>
       )}

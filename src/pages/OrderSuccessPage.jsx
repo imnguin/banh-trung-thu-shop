@@ -1,12 +1,29 @@
+import { useEffect, useState } from 'react'
 import { Link, Navigate, useParams } from 'react-router-dom'
 import { CheckCircle } from '@phosphor-icons/react'
-import { useOrders } from '../context/OrderContext'
+import { getOrderByCode } from '../services/orderService'
 import { formatCurrency, formatDateTime } from '../lib/format'
 
 export default function OrderSuccessPage() {
   const { orderId } = useParams()
-  const { getOrderById } = useOrders()
-  const order = getOrderById(orderId)
+  const [order, setOrder] = useState(null)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    let active = true
+    getOrderByCode(orderId).then((res) => {
+      if (!active) return
+      setOrder(res.isError ? null : res.data)
+      setLoading(false)
+    })
+    return () => {
+      active = false
+    }
+  }, [orderId])
+
+  if (loading) {
+    return <div className="mx-auto max-w-2xl px-4 py-16 text-center text-muted-foreground">Đang tải đơn hàng...</div>
+  }
 
   if (!order) {
     return <Navigate to="/" replace />
@@ -24,7 +41,7 @@ export default function OrderSuccessPage() {
       <div className="mt-6 rounded-xl border border-border bg-surface p-5 text-left">
         <div className="flex items-center justify-between">
           <span className="text-sm text-muted-foreground">Mã đơn hàng</span>
-          <span className="font-heading text-lg font-bold text-primary">{order.id}</span>
+          <span className="font-heading text-lg font-bold text-primary">{order.orderCode}</span>
         </div>
         <div className="mt-1 flex items-center justify-between text-sm">
           <span className="text-muted-foreground">Thời gian đặt</span>

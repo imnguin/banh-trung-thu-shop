@@ -1,4 +1,4 @@
-import { STATUS_LABELS } from '../context/OrderContext'
+import { STATUS_LABELS } from '../data/orderStatus'
 
 const STATUS_STYLES = {
   pending: 'bg-amber-100 text-amber-800',

@@ -1,28 +1,26 @@
-import { createContext, useContext, useState } from 'react'
+import { createContext, useContext, useEffect, useState } from 'react'
+import * as authService from '../services/authService'
+import { getStoredAuth, subscribeAuthChange } from '../services/axiosClient'
 
 const AuthContext = createContext(null)
-const STORAGE_KEY = 'ktt_seller_session'
-
-const SELLER_ACCOUNT = { username: 'seller', password: '123456' }
 
 export function AuthProvider({ children }) {
-  const [isAuthenticated, setIsAuthenticated] = useState(() => sessionStorage.getItem(STORAGE_KEY) === '1')
+  const [seller, setSeller] = useState(getStoredAuth)
 
-  function login(username, password) {
-    const ok = username === SELLER_ACCOUNT.username && password === SELLER_ACCOUNT.password
-    if (ok) {
-      sessionStorage.setItem(STORAGE_KEY, '1')
-      setIsAuthenticated(true)
-    }
-    return ok
+  useEffect(() => subscribeAuthChange(setSeller), [])
+
+  async function login(username, otp) {
+    const res = await authService.login(username, otp)
+    return res
   }
 
-  function logout() {
-    sessionStorage.removeItem(STORAGE_KEY)
-    setIsAuthenticated(false)
+  async function logout() {
+    await authService.logout()
   }
 
-  return <AuthContext.Provider value={{ isAuthenticated, login, logout }}>{children}</AuthContext.Provider>
+  const value = { seller, isAuthenticated: Boolean(seller?.accessToken), login, logout }
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }
 
 export function useAuth() {

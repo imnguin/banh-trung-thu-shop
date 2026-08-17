@@ -1,22 +1,52 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, Navigate, useParams } from 'react-router-dom'
 import { CaretLeft, Check } from '@phosphor-icons/react'
 import StatusBadge from '../../components/StatusBadge'
-import { ORDER_STATUSES, STATUS_LABELS, useOrders } from '../../context/OrderContext'
+import { ORDER_STATUSES, STATUS_LABELS } from '../../data/orderStatus'
+import { getAllOrders, updateOrderStatus } from '../../services/orderService'
+import { notify } from '../../lib/notify'
 import { formatCurrency, formatDateTime } from '../../lib/format'
 
 export default function SellerOrderDetailPage() {
   const { orderId } = useParams()
-  const { getOrderById, updateOrderStatus } = useOrders()
-  const order = getOrderById(orderId)
+  const [order, setOrder] = useState(null)
+  const [loading, setLoading] = useState(true)
   const [saved, setSaved] = useState(false)
+
+  useEffect(() => {
+    let active = true
+    getAllOrders().then((res) => {
+      if (!active) return
+      if (!res.isError) {
+        setOrder(res.data?.find((o) => o._id === orderId) ?? null)
+      }
+      setLoading(false)
+    })
+    return () => {
+      active = false
+    }
+  }, [orderId])
+
+  if (loading) {
+    return <div className="py-16 text-center text-muted-foreground">Đang tải...</div>
+  }
 
   if (!order) {
     return <Navigate to="/nguoi-ban" replace />
   }
 
-  function handleStatusChange(e) {
-    updateOrderStatus(order.id, e.target.value)
+  async function handleStatusChange(e) {
+    const status = e.target.value
+    const res = await updateOrderStatus(order._id, status)
+    if (res.isError) {
+      notify('error', res.message || 'Không thể cập nhật trạng thái')
+      return
+    }
+    setOrder((prev) => ({
+      ...prev,
+      status,
+      statusHistory: [...prev.statusHistory, { status, at: new Date().toISOString() }],
+    }))
     setSaved(true)
     setTimeout(() => setSaved(false), 1800)
   }
@@ -28,7 +58,7 @@ export default function SellerOrderDetailPage() {
       </Link>
 
       <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
-        <h1 className="font-heading text-2xl font-bold text-foreground">Đơn hàng {order.id}</h1>
+        <h1 className="font-heading text-2xl font-bold text-foreground">Đơn hàng {order.orderCode}</h1>
         <StatusBadge status={order.status} />
       </div>
 

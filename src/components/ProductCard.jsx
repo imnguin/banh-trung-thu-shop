@@ -13,7 +13,7 @@ export default function ProductCard({ product }) {
       className="group flex flex-col overflow-hidden rounded-xl border border-border bg-surface transition-shadow hover:shadow-lg"
     >
       <div className="relative p-3 pb-0">
-        <ProductImage category={product.category} className="aspect-square w-full" />
+        <ProductImage category={product.category} image={product.image} alt={product.name} className="aspect-square w-full" />
         <div className="absolute left-5 top-5 flex flex-col gap-1">
           {product.tags.includes('best-seller') && (
             <span className="rounded-full bg-accent px-2 py-0.5 text-xs font-semibold text-accent-foreground">

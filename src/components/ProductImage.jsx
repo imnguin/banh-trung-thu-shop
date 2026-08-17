@@ -1,7 +1,15 @@
 import { MoonStars } from '@phosphor-icons/react'
 import { getCategoryTheme } from '../data/categories'
 
-export default function ProductImage({ category, className = '' }) {
+export default function ProductImage({ category, image, alt = '', className = '' }) {
+  if (image) {
+    return (
+      <div className={`relative overflow-hidden rounded-xl ${className}`}>
+        <img src={image} alt={alt} className="h-full w-full object-cover" loading="lazy" />
+      </div>
+    )
+  }
+
   return (
     <div
       className={`relative flex items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br ${getCategoryTheme(category)} ${className}`}

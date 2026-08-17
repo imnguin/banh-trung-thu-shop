@@ -20,7 +20,7 @@ export function CartProvider({ children }) {
   }, [items])
 
   function addItem(product, variant, qty) {
-    const key = `${product.id}::${variant.id}`
+    const key = `${product._id}::${variant.id}`
     const unitPrice = product.price + variant.priceDiff
     setItems((prev) => {
       const existing = prev.find((i) => i.key === key)
@@ -31,7 +31,7 @@ export function CartProvider({ children }) {
         ...prev,
         {
           key,
-          productId: product.id,
+          productId: product._id,
           slug: product.slug,
           variantId: variant.id,
           name: product.name,

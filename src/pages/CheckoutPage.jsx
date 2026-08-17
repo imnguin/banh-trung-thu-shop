@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { Navigate, useNavigate } from 'react-router-dom'
 import { useCart } from '../context/CartContext'
-import { useOrders } from '../context/OrderContext'
+import { createOrder } from '../services/orderService'
+import { notify } from '../lib/notify'
 import { formatCurrency } from '../lib/format'
 
 const FREE_SHIP_THRESHOLD = 500000
@@ -21,7 +22,6 @@ function validateField(name, value) {
 
 export default function CheckoutPage() {
   const { items, subtotal, clearCart } = useCart()
-  const { createOrder } = useOrders()
   const navigate = useNavigate()
 
   const [form, setForm] = useState({ name: '', phone: '', address: '', note: '' })
@@ -46,7 +46,7 @@ export default function CheckoutPage() {
     setErrors((prev) => ({ ...prev, [name]: validateField(name, value) }))
   }
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault()
     const nextErrors = {
       name: validateField('name', form.name),
@@ -57,8 +57,8 @@ export default function CheckoutPage() {
     if (Object.values(nextErrors).some(Boolean)) return
 
     setSubmitting(true)
-    setTimeout(() => {
-      const order = createOrder({
+    try {
+      const res = await createOrder({
         customer: { name: form.name.trim(), phone: form.phone.trim(), address: form.address.trim(), note: form.note.trim() },
         items,
         subtotal,
@@ -66,9 +66,17 @@ export default function CheckoutPage() {
         total,
         paymentMethod: payment,
       })
+      if (res.isError) {
+        notify('error', res.message || 'Đặt hàng thất bại, vui lòng thử lại')
+        return
+      }
       clearCart()
-      navigate(`/dat-hang-thanh-cong/${order.id}`)
-    }, 600)
+      navigate(`/dat-hang-thanh-cong/${res.data.orderCode}`)
+    } catch {
+      notify('error', 'Không thể kết nối máy chủ, vui lòng thử lại')
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   return (

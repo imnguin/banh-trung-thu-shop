@@ -1,16 +1,17 @@
 import { useState } from 'react'
 import { MagnifyingGlass } from '@phosphor-icons/react'
 import StatusBadge from '../components/StatusBadge'
-import { useOrders } from '../context/OrderContext'
+import { getOrdersByPhone } from '../services/orderService'
+import { notify } from '../lib/notify'
 import { formatCurrency, formatDateTime } from '../lib/format'
 
 export default function OrderLookupPage() {
-  const { getOrdersByPhone } = useOrders()
   const [phone, setPhone] = useState('')
   const [results, setResults] = useState(null)
   const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault()
     if (!/^0\d{9,10}$/.test(phone.trim())) {
       setError('Số điện thoại không hợp lệ')
@@ -18,8 +19,19 @@ export default function OrderLookupPage() {
       return
     }
     setError('')
-    const found = getOrdersByPhone(phone.trim())
-    setResults(found)
+    setLoading(true)
+    try {
+      const res = await getOrdersByPhone(phone.trim())
+      if (res.isError) {
+        notify('error', res.message || 'Không thể tra cứu đơn hàng')
+        return
+      }
+      setResults(res.data ?? [])
+    } catch {
+      notify('error', 'Không thể kết nối máy chủ, vui lòng thử lại')
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -45,9 +57,10 @@ export default function OrderLookupPage() {
         </div>
         <button
           type="submit"
-          className="flex cursor-pointer items-center gap-2 rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground hover:bg-primary-hover"
+          disabled={loading}
+          className="flex cursor-pointer items-center gap-2 rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground hover:bg-primary-hover disabled:cursor-wait disabled:opacity-70"
         >
-          <MagnifyingGlass size={18} /> Tra cứu
+          <MagnifyingGlass size={18} /> {loading ? 'Đang tra cứu...' : 'Tra cứu'}
         </button>
       </form>
       {error && (
@@ -63,9 +76,9 @@ export default function OrderLookupPage() {
           ) : (
             <ul className="flex flex-col gap-4">
               {results.map((order) => (
-                <li key={order.id} className="rounded-xl border border-border bg-surface p-5">
+                <li key={order._id} className="rounded-xl border border-border bg-surface p-5">
                   <div className="flex items-center justify-between">
-                    <span className="font-heading font-bold text-primary">{order.id}</span>
+                    <span className="font-heading font-bold text-primary">{order.orderCode}</span>
                     <StatusBadge status={order.status} />
                   </div>
                   <p className="mt-1 text-xs text-muted-foreground">{formatDateTime(order.createdAt)}</p>

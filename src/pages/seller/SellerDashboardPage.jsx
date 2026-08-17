@@ -1,13 +1,33 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Package, ShoppingBag, Wallet } from '@phosphor-icons/react'
 import StatusBadge from '../../components/StatusBadge'
-import { ORDER_STATUSES, STATUS_LABELS, useOrders } from '../../context/OrderContext'
+import { ORDER_STATUSES, STATUS_LABELS } from '../../data/orderStatus'
+import { getAllOrders } from '../../services/orderService'
+import { notify } from '../../lib/notify'
 import { formatCurrency, formatDateTime } from '../../lib/format'
 
 export default function SellerDashboardPage() {
-  const { orders } = useOrders()
+  const [orders, setOrders] = useState([])
+  const [loading, setLoading] = useState(true)
   const [statusFilter, setStatusFilter] = useState('all')
+
+  useEffect(() => {
+    let active = true
+    setLoading(true)
+    getAllOrders().then((res) => {
+      if (!active) return
+      if (res.isError) {
+        notify('error', res.message || 'Không thể tải danh sách đơn hàng')
+      } else {
+        setOrders(res.data ?? [])
+      }
+      setLoading(false)
+    })
+    return () => {
+      active = false
+    }
+  }, [])
 
   const stats = useMemo(() => {
     const pending = orders.filter((o) => o.status === 'pending').length
@@ -69,7 +89,9 @@ export default function SellerDashboardPage() {
         ))}
       </div>
 
-      {filtered.length === 0 ? (
+      {loading ? (
+        <div className="mt-10 text-center text-muted-foreground">Đang tải...</div>
+      ) : filtered.length === 0 ? (
         <div className="mt-10 text-center text-muted-foreground">Chưa có đơn hàng nào.</div>
       ) : (
         <div className="mt-4 overflow-x-auto rounded-xl border border-border bg-surface">
@@ -85,10 +107,10 @@ export default function SellerDashboardPage() {
             </thead>
             <tbody>
               {filtered.map((order) => (
-                <tr key={order.id} className="border-b border-border last:border-0 hover:bg-muted">
+                <tr key={order._id} className="border-b border-border last:border-0 hover:bg-muted">
                   <td className="px-4 py-3">
-                    <Link to={`/nguoi-ban/don-hang/${order.id}`} className="font-semibold text-primary hover:underline">
-                      {order.id}
+                    <Link to={`/nguoi-ban/don-hang/${order._id}`} className="font-semibold text-primary hover:underline">
+                      {order.orderCode}
                     </Link>
                   </td>
                   <td className="px-4 py-3">

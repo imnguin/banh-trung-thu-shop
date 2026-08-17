@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom'
 import { ArrowRight, Leaf, ShieldCheck, Truck } from '@phosphor-icons/react'
 import ProductCard from '../components/ProductCard'
 import ProductImage from '../components/ProductImage'
-import { PRODUCTS } from '../data/products'
+import { useProducts } from '../hooks/useProducts'
 import { CATEGORIES } from '../data/categories'
 
 const FEATURES = [
@@ -12,8 +12,9 @@ const FEATURES = [
 ]
 
 export default function HomePage() {
-  const bestSellers = PRODUCTS.filter((p) => p.tags.includes('best-seller')).slice(0, 4)
-  const newProducts = PRODUCTS.filter((p) => p.tags.includes('new')).slice(0, 4)
+  const { products, loading } = useProducts({ activeOnly: true })
+  const bestSellers = products.filter((p) => p.tags.includes('best-seller')).slice(0, 4)
+  const newProducts = products.filter((p) => p.tags.includes('new')).slice(0, 4)
 
   return (
     <div>
@@ -83,11 +84,15 @@ export default function HomePage() {
             Xem tất cả
           </Link>
         </div>
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-          {bestSellers.map((p) => (
-            <ProductCard key={p.id} product={p} />
-          ))}
-        </div>
+        {!loading && bestSellers.length === 0 ? (
+          <p className="text-muted-foreground">Chưa có sản phẩm bán chạy nào.</p>
+        ) : (
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+            {bestSellers.map((p) => (
+              <ProductCard key={p._id} product={p} />
+            ))}
+          </div>
+        )}
       </section>
 
       {newProducts.length > 0 && (
@@ -100,7 +105,7 @@ export default function HomePage() {
           </div>
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
             {newProducts.map((p) => (
-              <ProductCard key={p.id} product={p} />
+              <ProductCard key={p._id} product={p} />
             ))}
           </div>
         </section>
