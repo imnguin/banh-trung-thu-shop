@@ -94,7 +94,7 @@ export default function SellerLoginPage() {
                 <div className="form-content">
                     <div className="flex items-center justify-center gap-2 pb-2 font-heading text-lg font-bold text-primary">
                         <MoonStars size={24} weight="fill" aria-hidden="true" />
-                        Kênh người bán
+                        Bách hóa SV
                     </div>
 
                     {currentStep === 1 && (

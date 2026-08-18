@@ -8,7 +8,7 @@ export default function Footer() {
             <div className="mx-auto grid max-w-6xl gap-8 px-4 py-10 sm:grid-cols-2 md:grid-cols-4">
                 <div>
                     <h3 className="font-heading text-lg font-bold text-primary">
-                        Kim Yến
+                        Bách Hóa SV
                     </h3>
                     <p className="mt-2 text-sm text-muted-foreground">
                         Bánh trung thu truyền thống &amp; cao cấp, gia truyền
@@ -46,11 +46,10 @@ export default function Footer() {
                             </Link>
                         </li>
                         <li className="flex items-center gap-2">
-                            <Phone size={16} aria-hidden="true" /> 1900 5454
+                            <Phone size={16} aria-hidden="true" /> 0332093438
                         </li>
                         <li className="flex items-center gap-2">
-                            <MapPin size={16} aria-hidden="true" /> 12 Trần Hưng
-                            Đạo, Q.1, TP.HCM
+                            <MapPin size={16} aria-hidden="true" /> Tôn Thất Tùng, phường Đông Hòa, TP Dĩ An
                         </li>
                     </ul>
                 </div>
@@ -68,8 +67,7 @@ export default function Footer() {
                 </div>
             </div>
             <div className="border-t border-border py-4 text-center text-xs text-muted-foreground">
-                © 2026 Kim Yến. Đây là website demo dùng để thử nghiệm thiết kế
-                UI/UX.
+                © 2026 Bách Hóa SV.
             </div>
         </footer>
     );

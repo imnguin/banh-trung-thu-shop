@@ -44,7 +44,7 @@ export default function HomePage() {
                             Trọn vị đoàn viên trong từng chiếc bánh
                         </h1>
                         <p className="mt-4 max-w-md text-base text-primary-foreground/85">
-                            Bánh trung thu gia truyền Kim Yến - đặt hàng online
+                            Bánh trung thu gia truyền Bách Hóa SV - đặt hàng online
                             chỉ trong vài phút, giao tận nơi trên toàn quốc.
                         </p>
                         <div className="mt-6 flex flex-wrap gap-3">

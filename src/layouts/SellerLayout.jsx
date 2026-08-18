@@ -25,7 +25,7 @@ export default function SellerLayout() {
                         className="flex items-center gap-2 font-heading text-base font-bold"
                     >
                         <MoonStars size={22} weight="fill" aria-hidden="true" />
-                        Kim Yến - Kênh người bán
+                        Bách Hóa SV
                     </Link>
                     <nav
                         className="flex items-center gap-1"
