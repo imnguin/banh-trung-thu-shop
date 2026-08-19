@@ -8,7 +8,7 @@ import {
     toggleProductStatus,
 } from "../../services/productService";
 import { notify } from "../../lib/notify";
-import { CATEGORIES } from "../../data/categories";
+import { useCategoryContext } from "../../context/CategoryContext";
 import { formatCurrency } from "../../lib/format";
 
 const TAG_OPTIONS = [
@@ -16,10 +16,10 @@ const TAG_OPTIONS = [
     { id: "new", label: "Mới" },
 ];
 
-const emptyForm = () => ({
+const emptyForm = (categories) => ({
     _id: null,
     name: "",
-    category: CATEGORIES[0].id,
+    category: categories[0]?._id ?? "",
     shortDesc: "",
     description: "",
     price: "",
@@ -33,12 +33,13 @@ const emptyForm = () => ({
 
 export default function SellerProductsPage() {
     const { products, loading, refetch } = useProducts({ activeOnly: false });
+    const { categories, getCategoryName } = useCategoryContext();
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [form, setForm] = useState(emptyForm());
+    const [form, setForm] = useState(() => emptyForm(categories));
     const [saving, setSaving] = useState(false);
 
     function openCreate() {
-        setForm(emptyForm());
+        setForm(emptyForm(categories));
         setIsModalOpen(true);
     }
 
@@ -169,11 +170,17 @@ export default function SellerProductsPage() {
                 <button
                     type="button"
                     onClick={openCreate}
-                    className="inline-flex cursor-pointer items-center gap-2 rounded-full bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground hover:bg-primary-hover"
+                    disabled={categories.length === 0}
+                    className="inline-flex cursor-pointer items-center gap-2 rounded-full bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-60"
                 >
                     <Plus size={18} /> Thêm sản phẩm
                 </button>
             </div>
+            {categories.length === 0 && (
+                <p className="mt-2 text-sm text-muted-foreground">
+                    Chưa có danh mục nào, vui lòng tạo danh mục trước.
+                </p>
+            )}
 
             {loading ? (
                 <p className="mt-8 text-center text-muted-foreground">
@@ -205,9 +212,7 @@ export default function SellerProductsPage() {
                                         {p.name}
                                     </td>
                                     <td className="px-4 py-3 text-muted-foreground">
-                                        {CATEGORIES.find(
-                                            (c) => c.id === p.category,
-                                        )?.name ?? p.category}
+                                        {getCategoryName(p.category)}
                                     </td>
                                     <td className="px-4 py-3 text-foreground">
                                         {formatCurrency(p.price)}
@@ -295,8 +300,8 @@ export default function SellerProductsPage() {
                                 }
                                 className="w-full cursor-pointer rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/30"
                             >
-                                {CATEGORIES.map((c) => (
-                                    <option key={c.id} value={c.id}>
+                                {categories.map((c) => (
+                                    <option key={c._id} value={c._id}>
                                         {c.name}
                                     </option>
                                 ))}

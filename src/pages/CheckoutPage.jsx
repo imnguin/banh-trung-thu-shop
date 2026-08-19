@@ -5,8 +5,8 @@ import { createOrder } from "../services/orderService";
 import { notify } from "../lib/notify";
 import { formatCurrency } from "../lib/format";
 
-const FREE_SHIP_THRESHOLD = 500000;
-const SHIPPING_FEE = 30000;
+const FREE_SHIP_THRESHOLD = Number(import.meta.env.VITE_FREE_SHIP_THRESHOLD);
+const SHIPPING_FEE = Number(import.meta.env.VITE_SHIPPING_FEE);
 
 const PAYMENT_METHODS = [
     { id: "cod", label: "Thanh toán khi nhận hàng (COD)" },

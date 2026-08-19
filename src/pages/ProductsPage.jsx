@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
 import ProductCard from "../components/ProductCard";
 import { useProducts } from "../hooks/useProducts";
-import { CATEGORIES } from "../data/categories";
+import { useCategoryContext } from "../context/CategoryContext";
 
 const SORT_OPTIONS = [
     { value: "default", label: "Nổi bật" },
@@ -12,6 +12,7 @@ const SORT_OPTIONS = [
 
 export default function ProductsPage() {
     const { products, loading } = useProducts({ activeOnly: true });
+    const { categories } = useCategoryContext();
     const [searchParams, setSearchParams] = useSearchParams();
     const activeCategory = searchParams.get("danh-muc") ?? "";
     const query = searchParams.get("q") ?? "";
@@ -75,13 +76,13 @@ export default function ProductsPage() {
                     >
                         Tất cả
                     </button>
-                    {CATEGORIES.map((cat) => (
+                    {categories.map((cat) => (
                         <button
-                            key={cat.id}
+                            key={cat._id}
                             type="button"
-                            onClick={() => setParam("danh-muc", cat.id)}
+                            onClick={() => setParam("danh-muc", cat._id)}
                             className={`shrink-0 cursor-pointer rounded-full border px-4 py-2 text-sm font-medium transition-colors ${
-                                activeCategory === cat.id
+                                activeCategory === cat._id
                                     ? "border-primary bg-primary text-primary-foreground"
                                     : "border-border text-foreground hover:border-primary"
                             }`}

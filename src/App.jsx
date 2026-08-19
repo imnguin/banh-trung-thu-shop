@@ -13,6 +13,7 @@ import SellerLoginPage from "./pages/seller/SellerLoginPage";
 import SellerDashboardPage from "./pages/seller/SellerDashboardPage";
 import SellerOrderDetailPage from "./pages/seller/SellerOrderDetailPage";
 import SellerProductsPage from "./pages/seller/SellerProductsPage";
+import SellerCategoriesPage from "./pages/seller/SellerCategoriesPage";
 
 function App() {
     return (
@@ -39,6 +40,10 @@ function App() {
                         element={<SellerOrderDetailPage />}
                     />
                     <Route path="san-pham" element={<SellerProductsPage />} />
+                    <Route
+                        path="danh-muc"
+                        element={<SellerCategoriesPage />}
+                    />
                 </Route>
             </Route>
         </Routes>

@@ -4,7 +4,7 @@ import { CaretRight, Check, ShoppingCart } from "@phosphor-icons/react";
 import ProductImage from "../components/ProductImage";
 import QuantitySelector from "../components/QuantitySelector";
 import { useProducts } from "../hooks/useProducts";
-import { getCategoryName } from "../data/categories";
+import { useCategoryContext } from "../context/CategoryContext";
 import { useCart } from "../context/CartContext";
 import { formatCurrency } from "../lib/format";
 
@@ -12,6 +12,7 @@ export default function ProductDetailPage() {
     const { slug } = useParams();
     const navigate = useNavigate();
     const { addItem } = useCart();
+    const { getCategoryName } = useCategoryContext();
     const { products, loading } = useProducts({ activeOnly: true });
 
     const product = useMemo(

@@ -3,7 +3,7 @@ import { ArrowRight, Leaf, ShieldCheck, Truck } from "@phosphor-icons/react";
 import ProductCard from "../components/ProductCard";
 import ProductImage from "../components/ProductImage";
 import { useProducts } from "../hooks/useProducts";
-import { CATEGORIES } from "../data/categories";
+import { useCategoryContext } from "../context/CategoryContext";
 
 const FEATURES = [
     {
@@ -25,6 +25,7 @@ const FEATURES = [
 
 export default function HomePage() {
     const { products, loading } = useProducts({ activeOnly: true });
+    const { categories } = useCategoryContext();
     const bestSellers = products
         .filter((p) => p.tags.includes("best-seller"))
         .slice(0, 4);
@@ -99,14 +100,14 @@ export default function HomePage() {
                     Danh mục sản phẩm
                 </h2>
                 <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-5">
-                    {CATEGORIES.map((cat) => (
+                    {categories.map((cat) => (
                         <Link
-                            key={cat.id}
-                            to={`/san-pham?danh-muc=${cat.id}`}
+                            key={cat._id}
+                            to={`/san-pham?danh-muc=${cat._id}`}
                             className="group"
                         >
                             <ProductImage
-                                category={cat.id}
+                                category={cat._id}
                                 className="aspect-square w-full"
                             />
                             <div className="mt-2 text-center text-sm font-medium text-foreground group-hover:text-primary">

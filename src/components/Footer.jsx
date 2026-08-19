@@ -1,8 +1,10 @@
 import { Link } from "react-router-dom";
 import { MapPin, Phone, Storefront } from "@phosphor-icons/react";
-import { CATEGORIES } from "../data/categories";
+import { useCategoryContext } from "../context/CategoryContext";
 
 export default function Footer() {
+    const { categories } = useCategoryContext();
+
     return (
         <footer className="mt-16 border-t border-border bg-muted">
             <div className="mx-auto grid max-w-6xl gap-8 px-4 py-10 sm:grid-cols-2 md:grid-cols-4">
@@ -20,10 +22,10 @@ export default function Footer() {
                         Danh mục
                     </h4>
                     <ul className="space-y-2 text-sm text-muted-foreground">
-                        {CATEGORIES.map((cat) => (
-                            <li key={cat.id}>
+                        {categories.map((cat) => (
+                            <li key={cat._id}>
                                 <Link
-                                    to={`/san-pham?danh-muc=${cat.id}`}
+                                    to={`/san-pham?danh-muc=${cat._id}`}
                                     className="hover:text-primary"
                                 >
                                     {cat.name}

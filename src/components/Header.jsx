@@ -8,7 +8,7 @@ import {
     X,
 } from "@phosphor-icons/react";
 import { useCart } from "../context/CartContext";
-import { CATEGORIES } from "../data/categories";
+import { useCategoryContext } from "../context/CategoryContext";
 
 const NAV_LINKS = [
     { to: "/", label: "Trang chủ" },
@@ -18,6 +18,7 @@ const NAV_LINKS = [
 
 export default function Header() {
     const { itemCount } = useCart();
+    const { categories } = useCategoryContext();
     const [mobileOpen, setMobileOpen] = useState(false);
     const [search, setSearch] = useState("");
     const navigate = useNavigate();
@@ -140,10 +141,10 @@ export default function Header() {
                         <div className="mt-2 border-t border-border pt-2 text-xs font-semibold uppercase text-muted-foreground">
                             Danh mục
                         </div>
-                        {CATEGORIES.map((cat) => (
+                        {categories.map((cat) => (
                             <Link
-                                key={cat.id}
-                                to={`/san-pham?danh-muc=${cat.id}`}
+                                key={cat._id}
+                                to={`/san-pham?danh-muc=${cat._id}`}
                                 onClick={() => setMobileOpen(false)}
                                 className="rounded-lg px-2 py-2.5 text-sm text-foreground hover:bg-muted"
                             >

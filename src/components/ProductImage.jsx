@@ -1,5 +1,5 @@
 import { MoonStars } from "@phosphor-icons/react";
-import { getCategoryTheme } from "../data/categories";
+import { useCategoryContext } from "../context/CategoryContext";
 
 export default function ProductImage({
     category,
@@ -7,6 +7,8 @@ export default function ProductImage({
     alt = "",
     className = "",
 }) {
+    const { getCategoryTheme } = useCategoryContext();
+
     if (image) {
         return (
             <div className={`relative overflow-hidden rounded-xl ${className}`}>

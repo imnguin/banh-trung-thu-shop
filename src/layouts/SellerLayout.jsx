@@ -5,6 +5,7 @@ import { useAuth } from "../context/AuthContext";
 const NAV_LINKS = [
     { to: "/nguoi-ban", label: "Đơn hàng", end: true },
     { to: "/nguoi-ban/san-pham", label: "Sản phẩm", end: false },
+    { to: "/nguoi-ban/danh-muc", label: "Danh mục", end: false },
 ];
 
 export default function SellerLayout() {
