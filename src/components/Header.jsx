@@ -41,7 +41,7 @@ export default function Header() {
                     className="flex shrink-0 items-center gap-2 font-heading text-lg font-bold text-primary"
                 >
                     <MoonStars size={26} weight="fill" aria-hidden="true" />
-                    <span>Bách Hóa SV</span>
+                    <span className="text-gold-shine">Bách Hóa FV</span>
                 </Link>
 
                 <nav

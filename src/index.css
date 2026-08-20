@@ -1,22 +1,24 @@
 @import "tailwindcss";
 
 @theme {
-    --color-primary: #b45309;
-    --color-primary-hover: #92400e;
-    --color-primary-foreground: #fffbeb;
-    --color-secondary: #d97706;
+    --color-primary: #b8860b;
+    --color-primary-hover: #8b6508;
+    --color-primary-foreground: #fffbea;
+    --color-secondary: #d4af37;
     --color-accent: #dc2626;
     --color-accent-hover: #b91c1c;
     --color-accent-foreground: #ffffff;
-    --color-background: #fffaf0;
+    --color-background: #fffcf2;
     --color-surface: #ffffff;
     --color-foreground: #3f2a14;
-    --color-muted: #fef3c7;
-    --color-muted-foreground: #78350f;
-    --color-border: #fde68a;
+    --color-muted: #fbf3d9;
+    --color-muted-foreground: #7c5e10;
+    --color-border: #e8d48b;
     --color-success: #16a34a;
     --color-success-foreground: #ffffff;
     --color-destructive: #b91c1c;
+
+    --gradient-gold: linear-gradient(135deg, #fce28a 0%, #d4af37 25%, #b8860b 50%, #d4af37 75%, #fce28a 100%);
 
     --font-sans: "Nunito Sans", system-ui, -apple-system, sans-serif;
     --font-heading: "Rubik", system-ui, -apple-system, sans-serif;
@@ -24,10 +26,10 @@
 
 @media (prefers-color-scheme: dark) {
     :root {
-        --color-primary: #d97706;
-        --color-primary-hover: #f59e0b;
+        --color-primary: #e7c567;
+        --color-primary-hover: #f4d989;
         --color-primary-foreground: #1c1006;
-        --color-secondary: #f59e0b;
+        --color-secondary: #c9a227;
         --color-accent: #ef4444;
         --color-accent-hover: #f87171;
         --color-accent-foreground: #1c1006;
@@ -35,13 +37,30 @@
         --color-surface: #2b1c0d;
         --color-foreground: #f5ead6;
         --color-muted: #3a2712;
-        --color-muted-foreground: #cbb896;
-        --color-border: #4a331a;
+        --color-muted-foreground: #dcc283;
+        --color-border: #5a4322;
+
+        --gradient-gold: linear-gradient(135deg, #f4d989 0%, #e7c567 25%, #c9a227 50%, #e7c567 75%, #f4d989 100%);
     }
 }
 
 html {
     scroll-behavior: smooth;
+}
+
+.text-gold-shine {
+    background: var(--gradient-gold);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: gold-shine 3s linear infinite;
+}
+
+@keyframes gold-shine {
+    to {
+        background-position: 200% center;
+    }
 }
 
 body {

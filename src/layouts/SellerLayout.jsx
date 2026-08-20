@@ -26,7 +26,7 @@ export default function SellerLayout() {
                         className="flex items-center gap-2 font-heading text-base font-bold"
                     >
                         <MoonStars size={22} weight="fill" aria-hidden="true" />
-                        Bách Hóa SV
+                        Bách Hóa FV
                     </Link>
                     <nav
                         className="flex items-center gap-1"

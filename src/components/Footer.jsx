@@ -9,8 +9,8 @@ export default function Footer() {
         <footer className="mt-16 border-t border-border bg-muted">
             <div className="mx-auto grid max-w-6xl gap-8 px-4 py-10 sm:grid-cols-2 md:grid-cols-4">
                 <div>
-                    <h3 className="font-heading text-lg font-bold text-primary">
-                        Bách Hóa SV
+                    <h3 className="font-heading text-lg font-bold text-gold-shine">
+                        Bách Hóa FV
                     </h3>
                     <p className="mt-2 text-sm text-muted-foreground">
                         Bánh trung thu truyền thống &amp; cao cấp, gia truyền
@@ -69,7 +69,7 @@ export default function Footer() {
                 </div>
             </div>
             <div className="border-t border-border py-4 text-center text-xs text-muted-foreground">
-                © 2026 Bách Hóa SV.
+                © 2026 Bách Hóa FV.
             </div>
         </footer>
     );
